@@ -1,0 +1,117 @@
+<html>
+<head>
+  <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.1/jquery.dataTables.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.8.1/jquery.flot.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+
+</head>
+
+
+<div id="tab-inputs" class="calculator">
+    
+  <div id="tabs" height="100%" width="100%">
+    <h1 style="text-align:center;">AMC CALCULATOR</h1>
+	<ul>
+      <!--button href="/calculator/sip" class="btn"><i class="fa fa-lock"></i> SIP</button>
+      <button href="/calculator/lapsum" class="btn"><i class="fa fa-lock"></i> LAPSUM</button-->
+      <fieldset class="radio_btn"><input type="radio" name="SIP" class= "btn" onclick="window.location='/calculator/sip';"><i class="fa fa-lock"></i>SIP</input></fieldset>
+      <fieldset class="radio_btn"><input type="radio" name="lapsum" class= "btn" onclick="window.location='/calculator/lapsum';" checked><i class="fa fa-lock"></i>LUMPSUM</input></fieldset>
+	</ul>
+  </div>  
+  
+  <form id="processForm">
+    <fieldset>
+	  <p>
+		<label for="Investment Amount" class="inputlable">Investment Amount:</label>
+		<input type="number" name="Investment Amount" id="Investment_Amount" value="1000" class="inputbox"/>
+    <div style="text-align:right;color:red" class="error" id="investmentErr"></div>
+	  </p>
+      <p>
+        <label for="Expected Market Return" class="inputlable">Expected Market Return %:</label>
+        <input type="number" name="Expected Market Return" id="Expected_Market_Return" value="5" class="inputbox"/>
+        <div style="text-align:right;color:red" class="error" id="expreturnErr"></div>
+      </p>
+      <p>
+        <label for="Current Age" class="inputlable">Current Age:</label>
+        <input type="number" name="Current Age" id="Current_Age" value="25" class="inputbox"/>
+        <div style="text-align:right;color:red" class="error" id="ageErr"></div>
+      </p>
+      <p>
+        <label for="Expected Retirement Age" class="inputlable">Expected Retirement Age:</label>
+        <input type="number" name="Expected Retirement Age" id="Expected_Retirement_Age" value="58" class="inputbox"/>
+        <div style="text-align:right;color:red" class="error" id="retirementageErr"></div>
+      </p>
+      <br>
+      <p>
+        <label for="Total Invested Amount" class="inputlable"><b>Total Invested Amount:</b></label>
+        <input type="text" name="Total Invested Amount" id="Total_Invested_Amount" value="" class="inputbox"/>
+      </p>
+      <p>
+        <label for="Estimated Value at Retirement" class="inputlable"><b>Estimated Value at Retirement:</b></label>
+        <input type="text" name="Estimated Value at Retirement" id="Estimated_Value_at_Retirement" value="" class="inputbox"/>
+      </p>
+      <p>
+        <label class="inputlable"><b>Estimated Returns:</b></label>
+        <input type="text" name="Estimated Returns" id="Estimated_Retrun" value="" class="inputbox"/>
+      </p>
+    </fieldset>
+  </form>
+
+    <script>
+      function printError(elemId, hintMsg) {
+        document.getElementById(elemId).innerHTML = hintMsg;
+      }
+
+			$('#Investment_Amount, #Expected_Market_Return, #Current_Age, #Expected_Retirement_Age').on('input', function () {
+        var investmentErr = expreturnErr = ageErr = retirementageErr = true
+
+				var investment = parseFloat($('#Investment_Amount').val());
+        if (investment <= 0){
+            printError("investmentErr", "Please enter valid number");
+          }
+          else{
+            printError("investmentErr", "");
+        }
+
+				var exp_return = parseFloat($('#Expected_Market_Return').val());
+        if (exp_return <= 0){
+          printError("expreturnErr", "Please enter valid number");
+        }
+        else{
+          printError("expreturnErr", "");
+        }
+				var age = parseFloat($('#Current_Age').val());
+        if (age <= 0){
+          printError("ageErr", "Please enter valid age");
+        }
+        else{
+          printError("ageErr", "");
+        }
+				var retirement_age = parseFloat($('#Expected_Retirement_Age').val());
+		    if (retirement_age <= age || retirement_age <= 0){
+          printError("retirementageErr", "Retirement age greater than current age");
+        }
+        else{
+          printError("retirementageErr", "");
+        } 
+				var evr  = investment * Math.pow((1+(exp_return/100)),(retirement_age - age))
+
+				$('#Total_Invested_Amount').val((investment).toFixed(2));
+				$('#Estimated_Value_at_Retirement').val((evr).toFixed(2));
+				$('#Estimated_Retrun').val((evr - investment).toFixed(2));
+			});
+      </script>
+        
+      
+  
+</div>
+
+
+
+
+</html>
